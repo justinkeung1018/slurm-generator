@@ -7,6 +7,7 @@ from typedefs import Language
 import aioconsole
 import aiohttp
 import asyncio
+import time
 
 
 async def main():
@@ -53,11 +54,17 @@ async def main():
         ###########      USER PROMPTS END      ###########
         ##################################################
 
+        await aioconsole.aprint("Generating SLURM packet...")
+        start_time = time.time()
+
         translator = TossupTranslator(GoogleTranslator(session))
         translated_tossups = [await translator.translate_tossup(tossup, num_translations, Language.ENGLISH, Language.ENGLISH) for tossup in tossups]
     
     writer = MicrosoftWordWriter()
     writer.write_tossups(packet_name, translated_tossups, packet_name)
+
+    end_time = time.time()
+    await aioconsole.aprint(f"SLURM packet generation complete. Time taken: {end_time - start_time}.")
 
 
 if __name__ == "__main__":
