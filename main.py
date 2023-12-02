@@ -7,10 +7,13 @@ from slurm.types import Language
 import aioconsole
 import aiohttp
 import asyncio
+import pathlib
 import time
 
 
 async def main():
+    DEFAULT_OUTPUT_DIR = "./output"
+
     async with aiohttp.ClientSession() as session:
         query_service = await QBReaderQueryService.create(session)
 
@@ -50,6 +53,10 @@ async def main():
 
         packet_name = await aioconsole.ainput("Give your SLURM packet a name: ")
 
+        """ Create the output directory and any parents if they do not exist. """
+        output_dir = await aioconsole.ainput(f"Specify the output directory (defaults to {DEFAULT_OUTPUT_DIR}): ") or DEFAULT_OUTPUT_DIR
+        pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
+
         ##################################################
         ###########      USER PROMPTS END      ###########
         ##################################################
@@ -61,7 +68,7 @@ async def main():
         translated_tossups = [await translator.translate_tossup(tossup, num_translations, Language.ENGLISH, Language.ENGLISH) for tossup in tossups]
     
     writer = MicrosoftWordWriter()
-    writer.write_tossups(packet_name, translated_tossups, packet_name)
+    writer.write_tossups(packet_name, translated_tossups, output_dir + "/" + packet_name)
 
     end_time = time.time()
     await aioconsole.aprint(f"SLURM packet generation complete. Time taken: {end_time - start_time}.")
