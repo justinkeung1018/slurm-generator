@@ -1,4 +1,4 @@
 aioconsole==0.6.2
 aiohttp==3.9.1
 python_docx==1.1.0
-qbreader==0.1.3
+qbreader @ git+https://github.com/qbreader/python-module
