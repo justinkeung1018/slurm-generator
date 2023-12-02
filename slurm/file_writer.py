@@ -1,4 +1,4 @@
-from typedefs import Tossup
+from slurm.types import Tossup
 
 from docx import Document
 from docx.text.paragraph import Paragraph

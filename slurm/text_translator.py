@@ -1,4 +1,4 @@
-from typedefs import Language
+from slurm.types import Language
 
 import aiohttp
 from typing import Self

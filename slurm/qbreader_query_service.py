@@ -1,6 +1,6 @@
 from qbreader import Async as qbr
 import qbreader
-from typedefs import Tossup
+from slurm.types import Tossup
 
 import aiohttp
 from typing import List, Self, Type

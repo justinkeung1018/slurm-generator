@@ -1,8 +1,8 @@
-from text_translator import GoogleTranslator
-from file_writer import MicrosoftWordWriter
-from qbreader_query_service import QBReaderQueryService
-from tossup_translator import TossupTranslator
-from typedefs import Language
+from slurm.file_writer import MicrosoftWordWriter
+from slurm.qbreader_query_service import QBReaderQueryService
+from slurm.text_translator import GoogleTranslator
+from slurm.tossup_translator import TossupTranslator
+from slurm.types import Language
 
 import aioconsole
 import aiohttp

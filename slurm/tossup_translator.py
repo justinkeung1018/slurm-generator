@@ -1,5 +1,5 @@
-from text_translator import TextTranslator
-from typedefs import Language, Tossup
+from slurm.text_translator import TextTranslator
+from slurm.types import Language, Tossup
 
 import random
 from typing import Self
