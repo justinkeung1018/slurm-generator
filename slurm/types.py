@@ -2,6 +2,7 @@ import enum
 
 from typing import Optional, Self
 
+
 class Category(enum.StrEnum):
     """Question category enum."""
 

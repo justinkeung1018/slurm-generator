@@ -4,6 +4,7 @@ from slurm.types import Language, Tossup
 import random
 from typing import Self
 
+
 class TossupTranslator:
     def __init__(self: Self, translator: TextTranslator):
         self.translator = translator
