@@ -81,6 +81,22 @@ class Tossup:
         return self.question
 
 
+class Difficulty(enum.StrEnum):
+    """ Difficulty of question sets. """
+
+    UNRATED   = "Unrated"
+    MS        = "Middle school"
+    HS_EASY   = "High school (easy)"
+    HS_REGS   = "High school (regionals)"
+    HS_HARD   = "High school (hard)"
+    HS_NATS   = "High school (nationals)"
+    ONE_DOT   = "One dot"
+    TWO_DOT   = "Two dot"
+    THREE_DOT = "Three dot"
+    FOUR_DOT  = "Four dot"
+    OPEN      = "Open"
+
+
 class Language(enum.StrEnum):
     """ Language codes available for translation. """
 
