@@ -33,3 +33,7 @@ class QBReaderQueryService:
     async def num_packets(self: Self, set_name: str) -> int:
         """ Retrieves the number of packets in the set. """
         return await self.client.num_packets(set_name)
+
+    async def set_list(self: Self) -> List[str]:
+        """ Retrieves a list of all question sets in the QBReader database. """
+        return await self.client.set_list()
