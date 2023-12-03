@@ -82,10 +82,12 @@ async def main():
             except ValueError:
                 await aioconsole.aprint("ERROR: Please enter a number. ", end="")
 
-        packet_name = await aioconsole.ainput("Give your SLURM packet a name: ")
+        packet_name = await aioconsole.ainput("Give your SLURM packet a name [skip for default]: ")
+        if not packet_name:
+            packet_name = f"SLURM_{set_name}_Packet {packet_number}"
 
         """ Create the output directory and any parents if they do not exist. """
-        output_dir = await aioconsole.ainput(f"Specify the output directory (defaults to {DEFAULT_OUTPUT_DIR}): ") or DEFAULT_OUTPUT_DIR
+        output_dir = await aioconsole.ainput(f"Specify the output directory [defaults to {DEFAULT_OUTPUT_DIR}]: ") or DEFAULT_OUTPUT_DIR
         pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
 
         ##################################################
