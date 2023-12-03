@@ -21,6 +21,19 @@ async def main():
         ##########      USER PROMPTS BEGIN      ##########
         ##################################################
 
+        retrieve_set_list = (await aioconsole.ainput("Do you want a list of all question sets? [y/n] ") == "y")
+        if retrieve_set_list:
+            set_list = await query_service.set_list()
+            await aioconsole.aprint("-----------------------------------------")
+            await aioconsole.aprint("----------   Set list begins   ----------")
+            await aioconsole.aprint("-----------------------------------------")
+
+            await aioconsole.aprint("\n".join(set_list))
+
+            await aioconsole.aprint("-----------------------------------------")
+            await aioconsole.aprint("----------    Set list ends    ----------")
+            await aioconsole.aprint("-----------------------------------------")
+
         retrieved_num_packets = False
         while not retrieved_num_packets:
             set_name = await aioconsole.ainput("Which question set do you want the SLURM tossups from? ")
