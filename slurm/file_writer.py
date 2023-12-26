@@ -15,10 +15,14 @@ class FileWriter:
     def write_tossups(
         self: Self,
         packet_name: str,
-        tossups: List[Tossup],
+        modified_tossups: List[Tossup],
+        original_tossups: Optional[List[Tossup]]=None,
         basename: Optional[str]=None
     ) -> None:
-        """ Writes the tossups to a document with the given basename and assigns the given name to the packet. """
+        """
+        Writes both the modified and original (if supplied) tossups to a document with the given
+        basename and assigns the given name to the packet.
+        """
         pass
 
 
@@ -28,7 +32,8 @@ class MicrosoftWordWriter(FileWriter):
     def write_tossups(
         self: Self,
         packet_name: str,
-        tossups: List[Tossup],
+        modified_tossups: List[Tossup],
+        original_tossups: Optional[List[Tossup]]=None,
         basename: Optional[str]=None
     ) -> None:
         document = Document()
@@ -37,10 +42,13 @@ class MicrosoftWordWriter(FileWriter):
 
         self.write_heading(document, packet_name)
 
-        for tossup in tossups:
-            self.write_question(document, tossup.question)
-            self.write_answerline(document, tossup.formatted_answer)
-            self.write_category_and_subcategory(document, tossup.category, tossup.subcategory)
+        for i in range(len(modified_tossups)):
+            modified_tossup = modified_tossups[i]
+            self.write_question(document, modified_tossup.question)
+            self.write_answerline(document, modified_tossup.formatted_answer)
+            self.write_category_and_subcategory(document, modified_tossup.category, modified_tossup.subcategory)
+            if original_tossups and i < len(original_tossups):
+                self.write_original_question(document, original_tossups[i])
             self.write_empty_line(document)
 
         document.save(f"{basename if basename else packet_name}.docx")
@@ -59,6 +67,9 @@ class MicrosoftWordWriter(FileWriter):
 
     def write_question(self: Self, document: Document, question: str) -> None:
         document.add_paragraph(question, style="List Number")
+
+    def write_original_question(self: Self, document: Document, question: str) -> None:
+        document.add_paragraph(f"(Original: {question})", style="List Continue")
 
     def write_answerline(self: Self, document: Document, answerline: str) -> None:
         paragraph = document.add_paragraph("ANSWER: ", style="List Continue")

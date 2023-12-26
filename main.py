@@ -97,6 +97,8 @@ async def main():
         else:
             slurm_packet_name = await aioconsole.ainput("Give your SLURM packet a name [skip for default]: ") or f"SLURM_{set_name}_Packet {packet_number}"
 
+        keep_original_tossups = (await aioconsole.ainput("Do you want to include the original tossups? [y/n] ") == "y")
+
         ##################################################
         ###########      USER PROMPTS END      ###########
         ##################################################
@@ -108,25 +110,38 @@ async def main():
         async def generate_packet(
             packet_name: str,
             tossups: List[Tossup],
+            keep_original_tossups: bool
         ) -> int:
             start_time = time.time()
-            translated_tossups = [await translator.translate_tossup(tossup, num_translations, Language.ENGLISH, Language.ENGLISH) for tossup in tossups]
-            writer.write_tossups(packet_name, translated_tossups, output_dir + "/" + packet_name)
-            end_time = time.time()
-            await aioconsole.aprint(f"SLURM packet generation complete. Time taken: {end_time - start_time} seconds.")
-            return end_time
+            try:
+                translated_tossups = [await translator.translate_tossup(tossup, num_translations, Language.ENGLISH, Language.ENGLISH) for tossup in tossups]
+                output_file_name = output_dir + "/" + packet_name
+
+                if keep_original_tossups:
+                    writer.write_tossups(packet_name, translated_tossups, tossups, output_file_name)
+                else:
+                    writer.write_tossups(packet_name, translated_tossups, None, output_file_name)
+
+                end_time = time.time()
+                await aioconsole.aprint(f"SLURM packet generation complete. Time taken: {end_time - start_time} seconds.")
+                return end_time
+            except Exception:
+                await aioconsole.aprint(f"SLURM packet generation failed.")
 
 
         if translate_entire_set:
             set_start_time = time.time()
+
             for packet_number in range(1, num_packets + 1):
                 await aioconsole.aprint(f"Generating SLURM packet {packet_number} out of {num_packets}...")
                 tossups = await query_service.packet_tossups(set_name, packet_number)
-                set_end_time = await generate_packet(f"{slurm_set_name}_Packet {packet_number}", tossups)
+                slurm_packet_name = f"{slurm_set_name}_Packet {packet_number}"
+                set_end_time = await generate_packet(slurm_packet_name, tossups, keep_original_tossups)
+
             await aioconsole.aprint(f"{num_packets} SLURM packets generation complete. Total time taken: {set_end_time - set_start_time} seconds.")
         else:
             await aioconsole.aprint(f"Generating SLURM packet...")
-            await generate_packet(slurm_packet_name, tossups)
+            await generate_packet(slurm_packet_name, tossups, keep_original_tossups)
 
 
 if __name__ == "__main__":
